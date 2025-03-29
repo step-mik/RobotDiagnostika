@@ -33,6 +33,8 @@
             btnLedOn = new Button();
             label1 = new Label();
             btnLedOff = new Button();
+            pictureBox1 = new PictureBox();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
             // comboPorts
@@ -80,11 +82,22 @@
             btnLedOff.UseVisualStyleBackColor = true;
             btnLedOff.Click += btnLedOff_Click;
             // 
+            // pictureBox1
+            // 
+            pictureBox1.Image = Properties.Resources.Clipped_image_20250328_211429;
+            pictureBox1.Location = new Point(337, 116);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(413, 296);
+            pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox1.TabIndex = 5;
+            pictureBox1.TabStop = false;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(951, 535);
+            Controls.Add(pictureBox1);
             Controls.Add(btnLedOff);
             Controls.Add(label1);
             Controls.Add(btnLedOn);
@@ -92,6 +105,7 @@
             Controls.Add(comboPorts);
             Name = "Form1";
             Text = "Form1";
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -103,5 +117,6 @@
         private Button btnLedOn;
         private Label label1;
         private Button btnLedOff;
+        private PictureBox pictureBox1;
     }
 }
