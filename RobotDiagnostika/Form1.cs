@@ -56,6 +56,27 @@ namespace RobotDiagnostika
         {
             serial?.Send(LedCommand.Off);
         }
+
+        private void btnLeftMotor_Click(object sender, EventArgs e)
+        {
+            labelSelected.Text = "Aktivní část: Levý motor";
+        }
+
+        private void btnRightMotor_Click(object sender, EventArgs e)
+        {
+            labelSelected.Text = "Aktivní část: Pravý motor";
+        }
+
+        private void btnServo_Click(object sender, EventArgs e)
+        {
+            labelSelected.Text = "Aktivní část: Servo";
+        }
+
+        private void btnSensor_Click(object sender, EventArgs e)
+        {
+            labelSelected.Text = "Aktivní část: Ultrazvukový senzor";
+        }
+
     }
 }
  
