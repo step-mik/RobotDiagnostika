@@ -5,11 +5,11 @@ using System.IO.Ports;
 namespace RobotDiagnostika
 
 {
-    public partial class Form1 : Form
+    public partial class LeftMotor : Form
     {
         private SerialManager? serial;
 
-        public Form1()
+        public LeftMotor()
         {
             InitializeComponent();
             comboPorts.Items.AddRange(SerialPort.GetPortNames());
@@ -46,15 +46,6 @@ namespace RobotDiagnostika
             }
         }
 
-
-        private void btnLedOn_Click(object? sender, EventArgs e)
-        {
-            serial?.Send(LedCommand.On);
-        }
-
-        private void btnLedOff_Click(object? sender, EventArgs e)
-        {
-            serial?.Send(LedCommand.Off);
-        }
+        
     }
 }

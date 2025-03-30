@@ -1,6 +1,6 @@
 ﻿namespace RobotDiagnostika
 {
-    partial class Form1
+    partial class LeftMotor
     {
         /// <summary>
         ///  Required designer variable.
@@ -34,6 +34,11 @@
             label1 = new Label();
             btnLedOff = new Button();
             pictureBox1 = new PictureBox();
+            btnLeftMotor = new Button();
+            btnRightMotor = new Button();
+            btnServo = new Button();
+            btnSensor = new Button();
+            labelSelected = new Label();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
@@ -92,20 +97,76 @@
             pictureBox1.TabIndex = 5;
             pictureBox1.TabStop = false;
             // 
-            // Form1
+            // btnLeftMotor
+            // 
+            btnLeftMotor.Location = new Point(617, 420);
+            btnLeftMotor.Name = "btnLeftMotor";
+            btnLeftMotor.Size = new Size(94, 29);
+            btnLeftMotor.TabIndex = 6;
+            btnLeftMotor.Text = "Left Motor";
+            btnLeftMotor.UseVisualStyleBackColor = true;
+            // 
+            // btnRightMotor
+            // 
+            btnRightMotor.Location = new Point(617, 455);
+            btnRightMotor.Name = "btnRightMotor";
+            btnRightMotor.Size = new Size(94, 29);
+            btnRightMotor.TabIndex = 7;
+            btnRightMotor.Text = "RightMotor";
+            btnRightMotor.UseVisualStyleBackColor = true;
+            // 
+            // btnServo
+            // 
+            btnServo.Location = new Point(487, 420);
+            btnServo.Name = "btnServo";
+            btnServo.Size = new Size(94, 29);
+            btnServo.TabIndex = 8;
+            btnServo.Text = "Servo";
+            btnServo.UseVisualStyleBackColor = true;
+            // 
+            // btnSensor
+            // 
+            btnSensor.Location = new Point(338, 420);
+            btnSensor.Name = "btnSensor";
+            btnSensor.Size = new Size(130, 29);
+            btnSensor.TabIndex = 9;
+            btnSensor.Text = "ultrasonic sensor";
+            btnSensor.UseVisualStyleBackColor = true;
+            // 
+            // labelSelected
+            // 
+            labelSelected.AutoSize = true;
+            labelSelected.Location = new Point(243, 426);
+            labelSelected.Name = "labelSelected";
+            labelSelected.Size = new Size(50, 20);
+            labelSelected.TabIndex = 10;
+            labelSelected.Text = "label2";
+            // 
+            // LeftMotor
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(951, 535);
+            Controls.Add(labelSelected);
+            Controls.Add(btnSensor);
+            Controls.Add(btnServo);
+            Controls.Add(btnRightMotor);
+            Controls.Add(btnLeftMotor);
             Controls.Add(pictureBox1);
             Controls.Add(btnLedOff);
             Controls.Add(label1);
             Controls.Add(btnLedOn);
             Controls.Add(btnConnect);
             Controls.Add(comboPorts);
-            Name = "Form1";
+            Name = "LeftMotor";
             Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            // 
+            btnLeftMotor.Click += btnLeftMotor_Click;
+            btnRightMotor.Click += btnRightMotor_Click;
+            btnServo.Click += btnServo_Click;
+            btnSensor.Click += btnSensor_Click;
+
             ResumeLayout(false);
             PerformLayout();
         }
@@ -118,5 +179,10 @@
         private Label label1;
         private Button btnLedOff;
         private PictureBox pictureBox1;
+        private Button btnLeftMotor;
+        private Button btnRightMotor;
+        private Button btnServo;
+        private Button btnSensor;
+        private Label labelSelected;
     }
 }
