@@ -8,6 +8,9 @@ namespace RobotDiagnostika
     public partial class Form1 : Form
     {
         private SerialManager? serial;
+        private MotorController? motorController;
+
+
 
         public Form1()
         {
@@ -17,6 +20,8 @@ namespace RobotDiagnostika
             btnLedOn.Click += btnLedOn_Click;
             btnLedOff.Click += btnLedOff_Click;
             btnConnect.Click += btnConnect_Click;
+            btnLeftMotor.Enabled = false;
+
         }
 
         // pripojení k COM portu
@@ -44,6 +49,10 @@ namespace RobotDiagnostika
             {
                 MessageBox.Show("Chyba při pripojení: " + ex.Message);
             }
+            motorController = new MotorController(serial);
+            btnLeftMotor.Enabled = true;
+
+
         }
 
 
@@ -60,6 +69,18 @@ namespace RobotDiagnostika
         private void btnLeftMotor_Click(object sender, EventArgs e)
         {
             labelSelected.Text = "Aktivní část: Levý motor";
+
+            if (motorController == null)
+            {
+                MessageBox.Show("Nejprve se připoj k Arduinu.");
+                return;
+            }
+
+            bool isRunning = motorController.ToggleLeftMotor();
+
+            labelSelected.Text = isRunning ? "Levý motor: Zapnutý" : "Levý motor: Vypnutý";
+            btnLeftMotor.BackColor = isRunning ? Color.LightGreen : SystemColors.Control;
+
         }
 
         private void btnRightMotor_Click(object sender, EventArgs e)
