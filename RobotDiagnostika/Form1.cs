@@ -3,14 +3,12 @@ using RobotDiagnostika.Logic;
 using System.IO.Ports;
 
 namespace RobotDiagnostika
-
 {
     public partial class Form1 : Form
     {
         private SerialManager? serial;
-        private LeftMotor? motorController;
-
-
+        private LeftMotor? leftMotor;
+        private RightMotor? rightMotor;
 
         public Form1()
         {
@@ -20,11 +18,11 @@ namespace RobotDiagnostika
             btnLedOn.Click += btnLedOn_Click;
             btnLedOff.Click += btnLedOff_Click;
             btnConnect.Click += btnConnect_Click;
-            btnLeftMotor.Enabled = false;
 
+            btnLeftMotor.Enabled = false;
+            btnRightMotor.Enabled = false;
         }
 
-        // pripojení k COM portu
         private void btnConnect_Click(object? sender, EventArgs e)
         {
             if (comboPorts.SelectedItem is null)
@@ -35,7 +33,7 @@ namespace RobotDiagnostika
 
             if (serial != null && serial.IsOpen)
             {
-                MessageBox.Show("Už jsi pripojený!");
+                MessageBox.Show("Už jsi připojený!");
                 return;
             }
 
@@ -43,18 +41,19 @@ namespace RobotDiagnostika
             {
                 serial = new SerialManager(comboPorts.SelectedItem.ToString()!);
                 serial.Open();
-                MessageBox.Show("Pripojeno!");
+                MessageBox.Show("Připojeno!");
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Chyba při pripojení: " + ex.Message);
+                MessageBox.Show("Chyba při připojení: " + ex.Message);
+                return;
             }
-            motorController = new LeftMotor(serial);
+
+            leftMotor = new LeftMotor(serial);
+            rightMotor = new RightMotor(serial);
             btnLeftMotor.Enabled = true;
-
-
+            btnRightMotor.Enabled = true;
         }
-
 
         private void btnLedOn_Click(object? sender, EventArgs e)
         {
@@ -70,22 +69,32 @@ namespace RobotDiagnostika
         {
             labelSelected.Text = "Aktivní část: Levý motor";
 
-            if (motorController == null)
+            if (leftMotor == null)
             {
                 MessageBox.Show("Nejprve se připoj k Arduinu.");
                 return;
             }
 
-            bool isRunning = motorController.ToggleLeftMotor();
+            bool isRunning = leftMotor.ToggleLeftMotor();
 
             labelSelected.Text = isRunning ? "Levý motor: Zapnutý" : "Levý motor: Vypnutý";
             btnLeftMotor.BackColor = isRunning ? Color.LightGreen : SystemColors.Control;
-
         }
 
         private void btnRightMotor_Click(object sender, EventArgs e)
         {
             labelSelected.Text = "Aktivní část: Pravý motor";
+
+            if (rightMotor == null)
+            {
+                MessageBox.Show("Nejprve se připoj k Arduinu.");
+                return;
+            }
+
+            bool isRunning = rightMotor.ToggleRightMotor();
+
+            labelSelected.Text = isRunning ? "Pravý motor: Zapnutý" : "Pravý motor: Vypnutý";
+            btnRightMotor.BackColor = isRunning ? Color.LightGreen : SystemColors.Control;
         }
 
         private void btnServo_Click(object sender, EventArgs e)
@@ -97,7 +106,5 @@ namespace RobotDiagnostika
         {
             labelSelected.Text = "Aktivní část: Ultrazvukový senzor";
         }
-
     }
 }
- 
