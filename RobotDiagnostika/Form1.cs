@@ -8,7 +8,7 @@ namespace RobotDiagnostika
     public partial class Form1 : Form
     {
         private SerialManager? serial;
-        private MotorController? motorController;
+        private LeftMotor? motorController;
 
 
 
@@ -49,7 +49,7 @@ namespace RobotDiagnostika
             {
                 MessageBox.Show("Chyba při pripojení: " + ex.Message);
             }
-            motorController = new MotorController(serial);
+            motorController = new LeftMotor(serial);
             btnLeftMotor.Enabled = true;
 
 

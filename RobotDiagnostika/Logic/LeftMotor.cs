@@ -2,12 +2,12 @@
 
 namespace RobotDiagnostika.Logic
 {
-    public class MotorController
+    public class LeftMotor
     {
         private readonly SerialManager _serial;
         private bool _leftMotorRunning = false;
 
-        public MotorController(SerialManager serial)
+        public LeftMotor(SerialManager serial)
         {
             _serial = serial;
         }
