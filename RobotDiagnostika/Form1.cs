@@ -99,8 +99,18 @@ namespace RobotDiagnostika
 
         private void btnServo_Click(object sender, EventArgs e)
         {
+            if (serial == null || !serial.IsOpen)
+            {
+                MessageBox.Show("Nejprve se připoj k Arduinu.");
+                return;
+            }
+
             labelSelected.Text = "Aktivní část: Servo";
+
+            var servoForm = new ServoControlForm(serial);
+            servoForm.Show(); // Otevře nové okno
         }
+
 
         private void btnSensor_Click(object sender, EventArgs e)
         {
