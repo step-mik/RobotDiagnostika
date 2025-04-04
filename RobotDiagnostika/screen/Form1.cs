@@ -1,6 +1,7 @@
 ﻿using RobotDiagnostika.Serial;
 using RobotDiagnostika.Logic;
 using System.IO.Ports;
+using RobotDiagnostika.screen;
 
 namespace RobotDiagnostika
 
@@ -12,12 +13,18 @@ namespace RobotDiagnostika
         public Form1()
         {
             InitializeComponent();
-            comboPorts.Items.AddRange(SerialPort.GetPortNames());
 
+            comboPorts.Items.AddRange(SerialPort.GetPortNames());
             btnLedOn.Click += btnLedOn_Click;
             btnLedOff.Click += btnLedOff_Click;
             btnConnect.Click += btnConnect_Click;
+            this.Controls.Add(this.btnMotor);
+            this.Controls.Add(this.btnServo);
+            this.Controls.Add(this.btnSensor);
+
+
         }
+
 
         // pripojení k COM portu
         private void btnConnect_Click(object? sender, EventArgs e)
@@ -56,6 +63,29 @@ namespace RobotDiagnostika
         {
             serial?.Send(LedCommand.Off);
         }
+
+        private void btnServo_Click(object sender, EventArgs e)
+        {
+            var servoForm = new ServoControlForm(); // Vytvoření nové instance formuláře pro servo
+            servoForm.Show();
+        }
+
+        private void btnMotor_Click(object sender, EventArgs e)
+        {
+            // Otevřeme nový formulář pro ovládání motoru
+            var motorForm = new MotorControlForm(); // Vytvoření nové instance formuláře pro motor
+            motorForm.Show();
+        }
+
+        private void btnSensor_Click(object sender, EventArgs e)
+        {
+           var sensorForm = new SensorControlForm();
+            sensorForm.Show();
+        }
+
+
+
+
     }
 }
  

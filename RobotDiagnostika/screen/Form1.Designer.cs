@@ -34,6 +34,9 @@
             label1 = new Label();
             btnLedOff = new Button();
             pictureBox1 = new PictureBox();
+            btnServo = new Button();
+            btnMotor = new Button();
+            btnSensor = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
@@ -85,30 +88,64 @@
             // pictureBox1
             // 
             pictureBox1.Image = Properties.Resources.Clipped_image_20250328_211429;
-            pictureBox1.Location = new Point(337, 116);
+            pictureBox1.Location = new Point(358, 60);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(413, 296);
             pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox1.TabIndex = 5;
             pictureBox1.TabStop = false;
             // 
+            // btnServo
+            // 
+            btnServo.Location = new Point(526, 384);
+            btnServo.Name = "btnServo";
+            btnServo.Size = new Size(94, 29);
+            btnServo.TabIndex = 6;
+            btnServo.Text = "Servo";
+            btnServo.UseVisualStyleBackColor = true;
+            btnServo.Click += btnServo_Click;
+            // 
+            // btnMotor
+            // 
+            btnMotor.Location = new Point(677, 384);
+            btnMotor.Name = "btnMotor";
+            btnMotor.Size = new Size(94, 29);
+            btnMotor.TabIndex = 7;
+            btnMotor.Text = "Motor";
+            btnMotor.UseVisualStyleBackColor = true;
+            btnMotor.Click += btnMotor_Click;
+            // 
+            // btnSensor
+            // 
+            btnSensor.Location = new Point(358, 384);
+            btnSensor.Name = "btnSensor";
+            btnSensor.Size = new Size(94, 29);
+            btnSensor.TabIndex = 8;
+            btnSensor.Text = "Senzor";
+            btnSensor.UseVisualStyleBackColor = true;
+            btnSensor.Click += btnSensor_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(951, 535);
+            ClientSize = new Size(919, 485);
             Controls.Add(pictureBox1);
             Controls.Add(btnLedOff);
             Controls.Add(label1);
             Controls.Add(btnLedOn);
             Controls.Add(btnConnect);
             Controls.Add(comboPorts);
+            Controls.Add(btnServo);
+            Controls.Add(btnMotor);
+            Controls.Add(btnSensor);
             Name = "Form1";
             Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
+
 
         #endregion
 
@@ -118,5 +155,9 @@
         private Label label1;
         private Button btnLedOff;
         private PictureBox pictureBox1;
+        private Button btnServo;
+        private Button btnMotor;
+        private Button btnSensor;
+
     }
 }
