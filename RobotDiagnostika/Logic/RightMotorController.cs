@@ -10,6 +10,8 @@ namespace RobotDiagnostika.Logic
         private readonly Button button;
         private readonly SerialManager serial;
         private bool isRunning = false;
+        private bool isReversed = false;
+        private int currentSpeed = 200; // defaultní rychlost
 
         public RightMotorController(Button button, SerialManager serial)
         {
@@ -21,12 +23,18 @@ namespace RobotDiagnostika.Logic
 
         private void Button_Click(object? sender, EventArgs e)
         {
+            Toggle();
+        }
+
+        public void Toggle()
+        {
             isRunning = !isRunning;
 
             if (isRunning)
             {
                 button.BackColor = Color.LightGreen;
                 serial.Send("RIGHT_ON");
+                serial.Send($"RIGHT_SPEED:{currentSpeed}"); // nastavíme i aktuální rychlost
             }
             else
             {
@@ -40,6 +48,19 @@ namespace RobotDiagnostika.Logic
             isRunning = false;
             button.BackColor = SystemColors.Control;
             serial.Send("RIGHT_OFF");
+        }
+
+        public void Reverse()
+        {
+            isReversed = !isReversed;
+            serial.Send("RIGHT_REV");
+        }
+
+        public void SetSpeed(int pwm)
+        {
+            currentSpeed = pwm;
+            if (isRunning)
+                serial.Send($"RIGHT_SPEED:{currentSpeed}");
         }
     }
 }

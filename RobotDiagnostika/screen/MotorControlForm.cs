@@ -14,8 +14,8 @@ namespace RobotDiagnostika.screen
 {
     public partial class MotorControlForm : Form
     {
-        private LeftMotorController? leftMotor;
-        private RightMotorController? rightMotor;
+        private LeftMotorController leftMotor;
+        private RightMotorController rightMotor;
 
         public MotorControlForm(SerialManager serial)
         {
@@ -23,6 +23,15 @@ namespace RobotDiagnostika.screen
 
             leftMotor = new LeftMotorController(btnLeftMotor, serial);
             rightMotor = new RightMotorController(btnRightMotor, serial);
+
+            // Reverz
+            btnLeftReverse.Click += (s, e) => leftMotor.Reverse();
+            btnRightReverse.Click += (s, e) => rightMotor.Reverse();
+
+            // Rychlost
+            trackLeftSpeed.Scroll += (s, e) => leftMotor.SetSpeed(trackLeftSpeed.Value);
+            trackRightSpeed.Scroll += (s, e) => rightMotor.SetSpeed(trackRightSpeed.Value);
         }
     }
+
 }

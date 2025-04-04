@@ -51,6 +51,40 @@
             btnRightMotor.Size = new Size(120, 40);
             btnRightMotor.Text = "Pravý motor";
             btnRightMotor.UseVisualStyleBackColor = true;
+            // btnLeftReverse
+            btnLeftReverse = new Button();
+            btnLeftReverse.Location = new Point(100, 160);
+            btnLeftReverse.Size = new Size(120, 30);
+            btnLeftReverse.Text = "Reverz L";
+            Controls.Add(btnLeftReverse);
+
+            // btnRightReverse
+            btnRightReverse = new Button();
+            btnRightReverse.Location = new Point(250, 160);
+            btnRightReverse.Size = new Size(120, 30);
+            btnRightReverse.Text = "Reverz P";
+            Controls.Add(btnRightReverse);
+
+            // trackLeftSpeed
+            trackLeftSpeed = new TrackBar();
+            trackLeftSpeed.Location = new Point(100, 200);
+            trackLeftSpeed.Size = new Size(120, 45);
+            trackLeftSpeed.Minimum = 0;
+            trackLeftSpeed.Maximum = 255;
+            trackLeftSpeed.TickFrequency = 50;
+            trackLeftSpeed.Value = 200;
+            Controls.Add(trackLeftSpeed);
+
+            // trackRightSpeed
+            trackRightSpeed = new TrackBar();
+            trackRightSpeed.Location = new Point(250, 200);
+            trackRightSpeed.Size = new Size(120, 45);
+            trackRightSpeed.Minimum = 0;
+            trackRightSpeed.Maximum = 255;
+            trackRightSpeed.TickFrequency = 50;
+            trackRightSpeed.Value = 200;
+            Controls.Add(trackRightSpeed);
+
 
             // 
             // MotorControlForm
@@ -73,5 +107,14 @@
         private Label label1;
         private Button btnLeftMotor;
         private Button btnRightMotor;
+
+        //reverse buttons
+        private Button btnLeftReverse;
+        private Button btnRightReverse;
+
+        //real speed control
+        private TrackBar trackLeftSpeed;
+        private TrackBar trackRightSpeed;
+
     }
 }
