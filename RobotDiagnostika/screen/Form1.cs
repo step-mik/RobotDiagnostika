@@ -72,10 +72,16 @@ namespace RobotDiagnostika
 
         private void btnMotor_Click(object sender, EventArgs e)
         {
-            // Otevřeme nový formulář pro ovládání motoru
-            var motorForm = new MotorControlForm(); // Vytvoření nové instance formuláře pro motor
+            if (serial == null || !serial.IsOpen)
+            {
+                MessageBox.Show("Nejprve se připoj k sériovému portu.");
+                return;
+            }
+
+            var motorForm = new MotorControlForm(serial); // předáváme SerialManager
             motorForm.Show();
         }
+
 
         private void btnSensor_Click(object sender, EventArgs e)
         {
