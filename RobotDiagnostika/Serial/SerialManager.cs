@@ -30,5 +30,8 @@ namespace RobotDiagnostika.Serial
             if (serialPort.IsOpen)
                 serialPort.Close();
         }
+
+        public SerialPort Port => serialPort;
+
     }
 }
