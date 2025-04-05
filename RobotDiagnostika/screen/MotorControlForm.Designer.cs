@@ -1,4 +1,6 @@
-﻿namespace RobotDiagnostika.screen
+﻿using System.Windows.Forms.DataVisualization.Charting;
+
+namespace RobotDiagnostika.screen
 {
     partial class MotorControlForm
     {
@@ -30,6 +32,10 @@
 
         private void InitializeComponent()
         {
+            ChartArea chartArea1 = new ChartArea();
+            Series series1 = new Series();
+            ChartArea chartArea2 = new ChartArea();
+            Series series2 = new Series();
             btnLeftMotor = new Button();
             btnRightMotor = new Button();
             btnLeftReverse = new Button();
@@ -39,8 +45,12 @@
             logBoxLeft = new TextBox();
             logBoxRight = new TextBox();
             label1 = new Label();
+            chartLeft = new Chart();
+            chartRight = new Chart();
             ((System.ComponentModel.ISupportInitialize)trackLeftSpeed).BeginInit();
             ((System.ComponentModel.ISupportInitialize)trackRightSpeed).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)chartLeft).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)chartRight).BeginInit();
             SuspendLayout();
             // 
             // btnLeftMotor
@@ -128,11 +138,39 @@
             label1.TabIndex = 8;
             label1.Text = "Engines";
             // 
+            // chartLeft
+            // 
+            chartArea1.Name = "ChartArea1";
+            chartLeft.ChartAreas.Add(chartArea1);
+            chartLeft.Location = new Point(503, 275);
+            chartLeft.Name = "chartLeft";
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = SeriesChartType.Line;
+            series1.Name = "Speed";
+            chartLeft.Series.Add(series1);
+            chartLeft.Size = new Size(300, 200);
+            chartLeft.TabIndex = 0;
+            // 
+            // chartRight
+            // 
+            chartArea2.Name = "ChartArea1";
+            chartRight.ChartAreas.Add(chartArea2);
+            chartRight.Location = new Point(503, 39);
+            chartRight.Name = "chartRight";
+            series2.ChartArea = "ChartArea1";
+            series2.ChartType = SeriesChartType.Line;
+            series2.Name = "Speed";
+            chartRight.Series.Add(series2);
+            chartRight.Size = new Size(300, 200);
+            chartRight.TabIndex = 1;
+            // 
             // MotorControlForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(932, 680);
+            Controls.Add(chartLeft);
+            Controls.Add(chartRight);
             Controls.Add(label1);
             Controls.Add(btnLeftReverse);
             Controls.Add(btnRightReverse);
@@ -146,6 +184,8 @@
             Text = "MotorControlForm";
             ((System.ComponentModel.ISupportInitialize)trackLeftSpeed).EndInit();
             ((System.ComponentModel.ISupportInitialize)trackRightSpeed).EndInit();
+            ((System.ComponentModel.ISupportInitialize)chartLeft).EndInit();
+            ((System.ComponentModel.ISupportInitialize)chartRight).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -165,5 +205,10 @@
         private TextBox logBoxLeft;
         private TextBox logBoxRight;
         private Label label1;
+
+        // charts
+        private System.Windows.Forms.DataVisualization.Charting.Chart chartLeft;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chartRight;
+
     }
 }

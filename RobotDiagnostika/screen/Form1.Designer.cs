@@ -158,6 +158,7 @@
         private Button btnServo;
         private Button btnMotor;
         private Button btnSensor;
+        private TextBox logBox;
 
     }
 }
