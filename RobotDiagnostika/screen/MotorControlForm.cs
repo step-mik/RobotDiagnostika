@@ -18,6 +18,8 @@ namespace RobotDiagnostika.screen
         private LeftMotorController leftMotor;
         private RightMotorController rightMotor;
         private SerialManager serial;
+        private MotorChartManager leftChartManager;
+        private MotorChartManager rightChartManager;
 
 
         public MotorControlForm(SerialManager serial)
@@ -37,6 +39,10 @@ namespace RobotDiagnostika.screen
             trackRightSpeed.Scroll += (s, e) => rightMotor.SetSpeed(trackRightSpeed.Value);
 
             serial.Port.DataReceived += SerialDataReceived;
+
+            leftChartManager = new MotorChartManager(chartLeft);
+            rightChartManager = new MotorChartManager(chartRight);
+
         }
 
 
@@ -51,11 +57,21 @@ namespace RobotDiagnostika.screen
 
                 if (line.StartsWith("STATUS L:") && !logBoxLeft.IsDisposed)
                 {
-                    Invoke(() => logBoxLeft.AppendText(line + Environment.NewLine));
+                    int speed = ParseSpeed(line);
+                    Invoke(() =>
+                    {
+                        logBoxLeft.AppendText(line + Environment.NewLine);
+                        leftChartManager.AddPoint(speed);
+                    });
                 }
                 else if (line.StartsWith("STATUS R:") && !logBoxRight.IsDisposed)
                 {
-                    Invoke(() => logBoxRight.AppendText(line + Environment.NewLine));
+                    int speed = ParseSpeed(line);
+                    Invoke(() =>
+                    {
+                        logBoxRight.AppendText(line + Environment.NewLine);
+                        rightChartManager.AddPoint(speed);
+                    });
                 }
             }
             catch (Exception ex)
@@ -69,6 +85,8 @@ namespace RobotDiagnostika.screen
                     logBoxRight.AppendText("[ERROR] " + ex.Message + Environment.NewLine);
                 });
             }
+
+
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
@@ -84,7 +102,23 @@ namespace RobotDiagnostika.screen
             serial?.Send("RIGHT_OFF");
         }
 
-        
+        private int ParseSpeed(string line)
+        {
+            try
+            {
+                var parts = line.Split(' ');
+                foreach (var part in parts)
+                {
+                    if (part.StartsWith("SPEED:"))
+                        return int.Parse(part.Substring(6));
+                }
+            }
+            catch { }
+
+            return 0;
+        }
+
+
     }
 
 }
