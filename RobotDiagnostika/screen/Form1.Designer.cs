@@ -37,6 +37,7 @@
             btnServo = new Button();
             btnMotor = new Button();
             btnSensor = new Button();
+            batteryLabel = new Label();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
@@ -125,11 +126,21 @@
             btnSensor.UseVisualStyleBackColor = true;
             btnSensor.Click += btnSensor_Click;
             // 
+            // batteryLabel
+            // 
+            batteryLabel.AutoSize = true;
+            batteryLabel.Location = new Point(36, 141);
+            batteryLabel.Name = "batteryLabel";
+            batteryLabel.Size = new Size(99, 20);
+            batteryLabel.TabIndex = 0;
+            batteryLabel.Text = "Battery: 100%";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(919, 485);
+            Controls.Add(batteryLabel);
             Controls.Add(pictureBox1);
             Controls.Add(btnLedOff);
             Controls.Add(label1);
@@ -158,6 +169,7 @@
         private Button btnServo;
         private Button btnMotor;
         private Button btnSensor;
+        private Label batteryLabel;
 
     }
 }
