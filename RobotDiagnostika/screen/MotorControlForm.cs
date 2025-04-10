@@ -14,6 +14,7 @@ namespace RobotDiagnostika.screen
         private SerialManager serial;
         private MotorChartManager leftChartManager;
         private MotorChartManager rightChartManager;
+        private SerialDataRouter? serialRouter;
 
         public MotorControlForm(SerialManager serial)
         {
@@ -35,64 +36,31 @@ namespace RobotDiagnostika.screen
             leftChartManager = new MotorChartManager(chartLeft);
             rightChartManager = new MotorChartManager(chartRight);
 
-            // Posluchač na sériový port
-            if (serial?.Port?.IsOpen == true)
-                serial.Port.DataReceived += SerialDataReceived;
+            // Použít router pro příjem dat
+            serialRouter = new SerialDataRouter(serial.Port);
+            serialRouter.OnStatusLine += HandleStatusLine;
         }
 
-        private void SerialDataReceived(object sender, SerialDataReceivedEventArgs e)
+        private void HandleStatusLine(string line)
         {
-            try
+            if (!IsHandleCreated || IsDisposed)
+                return;
+
+            Invoke(() =>
             {
-                if (serial == null || serial.Port == null || !serial.Port.IsOpen)
-                    return;
-
-                string line = serial.Port.ReadLine()?.Trim();
-
-                // Zajímá nás pouze STATUS zpráva
-                if (string.IsNullOrWhiteSpace(line) || !line.StartsWith("STATUS "))
-                    return;
-
-                if (!IsHandleCreated || IsDisposed)
-                    return;
-
-                Invoke(() =>
+                if (line.StartsWith("STATUS L:") && !logBoxLeft.IsDisposed)
                 {
-                    if (line.StartsWith("STATUS L:") && !logBoxLeft.IsDisposed)
-                    {
-                        int speed = ParseSpeed(line);
-                        logBoxLeft.AppendText(line + Environment.NewLine);
-                        leftChartManager.AddPoint(speed);
-                    }
-                    else if (line.StartsWith("STATUS R:") && !logBoxRight.IsDisposed)
-                    {
-                        int speed = ParseSpeed(line);
-                        logBoxRight.AppendText(line + Environment.NewLine);
-                        rightChartManager.AddPoint(speed);
-                    }
-                });
-            }
-            catch (IOException)
-            {
-                // I/O chyba – běžně při zavření portu, ignorujeme
-            }
-            catch (ObjectDisposedException)
-            {
-                // Objekt zničen – konec
-            }
-            catch (Exception ex)
-            {
-                if (!IsHandleCreated || IsDisposed)
-                    return;
-
-                Invoke(() =>
+                    int speed = ParseSpeed(line);
+                    logBoxLeft.AppendText(line + Environment.NewLine);
+                    leftChartManager.AddPoint(speed);
+                }
+                else if (line.StartsWith("STATUS R:") && !logBoxRight.IsDisposed)
                 {
-                    if (!logBoxLeft.IsDisposed)
-                        logBoxLeft.AppendText("[ERROR] " + ex.Message + Environment.NewLine);
-                    if (!logBoxRight.IsDisposed)
-                        logBoxRight.AppendText("[ERROR] " + ex.Message + Environment.NewLine);
-                });
-            }
+                    int speed = ParseSpeed(line);
+                    logBoxRight.AppendText(line + Environment.NewLine);
+                    rightChartManager.AddPoint(speed);
+                }
+            });
         }
 
         private int ParseSpeed(string line)
@@ -115,9 +83,8 @@ namespace RobotDiagnostika.screen
         {
             base.OnFormClosing(e);
 
-            // Odhlásit posluchač
-            if (serial != null && serial.Port != null)
-                serial.Port.DataReceived -= SerialDataReceived;
+            // Odhlásit router
+            serialRouter?.Detach();
 
             // Zavřít port (pokud je otevřený)
             if (serial?.Port?.IsOpen == true)
