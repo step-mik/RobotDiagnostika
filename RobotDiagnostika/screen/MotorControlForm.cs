@@ -1,50 +1,44 @@
-﻿using RobotDiagnostika.Logic;
+﻿// MotorControlForm.cs
+using RobotDiagnostika.Logic;
 using RobotDiagnostika.Serial;
 using System;
-using System.Drawing;
-using System.IO.Ports;
 using System.Windows.Forms;
 
 namespace RobotDiagnostika.screen
 {
     public partial class MotorControlForm : Form
     {
-        private LeftMotorController leftMotor;
-        private RightMotorController rightMotor;
-        private SerialManager serial;
-        private MotorChartManager leftChartManager;
-        private MotorChartManager rightChartManager;
-        private SerialDataRouter? serialRouter;
+        private readonly LeftMotorController leftMotor;
+        private readonly RightMotorController rightMotor;
+        private readonly SerialManager serial;
+        private readonly SerialDataRouter router;
+        private readonly MotorChartManager leftChartManager;
+        private readonly MotorChartManager rightChartManager;
 
-        public MotorControlForm(SerialManager serial)
+        public MotorControlForm(SerialManager serial, SerialDataRouter router)
         {
             InitializeComponent();
             this.serial = serial;
+            this.router = router;
 
             leftMotor = new LeftMotorController(btnLeftMotor, serial);
             rightMotor = new RightMotorController(btnRightMotor, serial);
 
-            // Reverz
             btnLeftReverse.Click += (s, e) => leftMotor.Reverse();
             btnRightReverse.Click += (s, e) => rightMotor.Reverse();
 
-            // Rychlost
             trackLeftSpeed.Scroll += (s, e) => leftMotor.SetSpeed(trackLeftSpeed.Value);
             trackRightSpeed.Scroll += (s, e) => rightMotor.SetSpeed(trackRightSpeed.Value);
 
-            // Připojení grafů
             leftChartManager = new MotorChartManager(chartLeft);
             rightChartManager = new MotorChartManager(chartRight);
 
-            // Použít router pro příjem dat
-            serialRouter = new SerialDataRouter(serial.Port);
-            serialRouter.OnStatusLine += HandleStatusLine;
+            this.router.OnMotorStatus += HandleMotorStatus;
         }
 
-        private void HandleStatusLine(string line)
+        private void HandleMotorStatus(string line)
         {
-            if (!IsHandleCreated || IsDisposed)
-                return;
+            if (!IsHandleCreated || IsDisposed) return;
 
             Invoke(() =>
             {
@@ -82,17 +76,7 @@ namespace RobotDiagnostika.screen
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             base.OnFormClosing(e);
-
-            // Odhlásit router
-            serialRouter?.Detach();
-
-            // Zavřít port (pokud je otevřený)
-            if (serial?.Port?.IsOpen == true)
-                serial.Port.Close();
-
-            // Stop motory
-            serial?.Send("LEFT_OFF");
-            serial?.Send("RIGHT_OFF");
+            router.OnMotorStatus -= HandleMotorStatus;
         }
     }
 }
