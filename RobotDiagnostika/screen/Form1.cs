@@ -94,6 +94,21 @@ namespace RobotDiagnostika
             sensorForm.Show();
         }
 
+        private void HandleBatteryLine(string line)
+        {
+            if (!IsHandleCreated || IsDisposed) return;
+
+            Invoke(() =>
+            {
+                double voltage = BatteryIndicator.CalculateVoltageFromLine(line);
+                int percent = BatteryIndicator.CalculatePercentFromLine(line);
+
+                lblVoltage.Text = $"Voltage: {voltage:F2} V";
+                lblPercent.Text = $"{percent}%";
+                progressBattery.Value = Math.Clamp(percent, 0, 100);
+            });
+        }
+
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             base.OnFormClosing(e);

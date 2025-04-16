@@ -125,6 +125,33 @@
             btnSensor.UseVisualStyleBackColor = true;
             btnSensor.Click += btnSensor_Click;
             // 
+            // lblVoltage
+            // 
+            this.lblVoltage = new Label();
+            this.lblVoltage.Location = new Point(36, 130);
+            this.lblVoltage.Size = new Size(200, 25);
+            this.lblVoltage.Text = "Voltage: 0.00 V";
+            this.Controls.Add(this.lblVoltage);
+
+            // 
+            // lblPercent
+            // 
+            this.lblPercent = new Label();
+            this.lblPercent.Location = new Point(36, 160);
+            this.lblPercent.Size = new Size(200, 25);
+            this.lblPercent.Text = "0%";
+            this.Controls.Add(this.lblPercent);
+
+            // 
+            // progressBattery
+            // 
+            this.progressBattery = new ProgressBar();
+            this.progressBattery.Location = new Point(36, 190);
+            this.progressBattery.Size = new Size(250, 23);
+            this.progressBattery.Minimum = 0;
+            this.progressBattery.Maximum = 100;
+            this.Controls.Add(this.progressBattery);
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -158,6 +185,10 @@
         private Button btnServo;
         private Button btnMotor;
         private Button btnSensor;
+        private Label lblVoltage;
+        private Label lblPercent;
+        private ProgressBar progressBattery;
+
 
     }
 }
