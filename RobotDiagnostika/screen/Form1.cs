@@ -49,6 +49,8 @@ namespace RobotDiagnostika
 
                 // Vytvoříme router po otevření portu
                 serialRouter = new SerialDataRouter(serial.Port);
+                serialRouter.OnBatteryStatus += HandleBatteryLine;
+
 
                 MessageBox.Show("Připojeno!");
             }
