@@ -1,0 +1,124 @@
+String command;
+
+int leftPWM = 200;
+int rightPWM = 200;
+bool leftReversed = false;
+bool rightReversed = false;
+
+unsigned long lastStatusMillis = 0; // ⬅️ pro logování každých 2s
+
+void setup() {
+  Serial.begin(9600);
+
+  // Levý motor
+  pinMode(5, OUTPUT); // ENA (PWM)
+  pinMode(7, OUTPUT); // IN1
+  pinMode(2, OUTPUT); // IN2
+
+  // Pravý motor
+  pinMode(6, OUTPUT); // ENB (PWM)
+  pinMode(3, OUTPUT); // IN3
+  pinMode(4, OUTPUT); // IN4
+
+  // LED
+  pinMode(13, OUTPUT);
+
+  // Stop all motors
+  digitalWrite(7, LOW);
+  digitalWrite(2, LOW);
+  digitalWrite(3, LOW);
+  digitalWrite(4, LOW);
+  analogWrite(5, 0);
+  analogWrite(6, 0);
+}
+
+void loop() {
+  // --- Příkazy z PC ---
+  if (Serial.available()) {
+    command = Serial.readStringUntil('\n');
+    command.trim();
+
+    // --- LED ---
+    if (command == "LED_ON") {
+      digitalWrite(13, HIGH);
+    }
+    else if (command == "LED_OFF") {
+      digitalWrite(13, LOW);
+    }
+
+    // --- Levý motor ---
+    else if (command == "LEFT_ON") {
+      int limitedPWM = min(leftPWM, 130);  // max 150
+      if (leftReversed) {
+        digitalWrite(7, LOW);
+        digitalWrite(2, HIGH);
+      } else {
+        digitalWrite(7, HIGH);
+        digitalWrite(2, LOW);
+      }
+      analogWrite(5, limitedPWM);  // ✅ použít omezenou hodnotu!
+    }
+
+    else if (command == "LEFT_OFF") {
+      digitalWrite(7, LOW);
+      digitalWrite(2, LOW);
+      analogWrite(5, 0);
+    }
+    else if (command.startsWith("LEFT_SPEED:")) {
+      leftPWM = command.substring(11).toInt();
+      analogWrite(5, leftPWM);
+    }
+    else if (command == "LEFT_REV") {
+      leftReversed = !leftReversed;
+    }
+
+    // --- Pravý motor ---
+    else if (command == "RIGHT_ON") {
+    int limitedPWM = min(rightPWM, 180);  // max 150
+    if (rightReversed) {
+      digitalWrite(3, LOW);
+      digitalWrite(4, HIGH);
+    } else {
+      digitalWrite(3, HIGH);
+      digitalWrite(4, LOW);
+    }
+    analogWrite(6, limitedPWM);  // ✅ použít omezenou hodnotu!
+    }
+
+    else if (command == "RIGHT_OFF") {
+      digitalWrite(3, LOW);
+      digitalWrite(4, LOW);
+      analogWrite(6, 0);
+    }
+    else if (command.startsWith("RIGHT_SPEED:")) {
+      rightPWM = command.substring(12).toInt();
+      analogWrite(6, rightPWM);
+    }
+    else if (command == "RIGHT_REV") {
+      rightReversed = !rightReversed;
+    }
+
+    // --- Oba motory ---
+    else if (command == "ALL_STOP") {
+      digitalWrite(7, LOW);
+      digitalWrite(2, LOW);
+      digitalWrite(3, LOW);
+      digitalWrite(4, LOW);
+      analogWrite(5, 0);
+      analogWrite(6, 0);
+    }
+  }
+
+  // --- Stavový log každé 2 sekundy ---
+  if (millis() - lastStatusMillis >= 200) {
+    lastStatusMillis = millis();
+
+    Serial.println("STATUS L:" + String((digitalRead(7) || digitalRead(2)) ? "ON" : "OFF") +
+                   " SPEED:" + String(leftPWM) +
+                   " DIR:" + String(leftReversed ? "REV" : "FWD"));
+
+    Serial.println("STATUS R:" + String((digitalRead(3) || digitalRead(4)) ? "ON" : "OFF") +
+                   " SPEED:" + String(rightPWM) +
+                   " DIR:" + String(rightReversed ? "REV" : "FWD"));
+  }
+}
