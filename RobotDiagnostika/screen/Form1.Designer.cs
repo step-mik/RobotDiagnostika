@@ -34,12 +34,12 @@
             label1 = new Label();
             btnLedOff = new Button();
             pictureBox1 = new PictureBox();
-            btnServo = new Button();
             btnMotor = new Button();
             btnSensor = new Button();
             lblPercent = new Label();
             progressBattery = new ProgressBar();
             batteryLogBox = new TextBox();
+            btnBatteryInfo = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
@@ -99,17 +99,6 @@
             pictureBox1.TabIndex = 5;
             pictureBox1.TabStop = false;
             // 
-            // btnServo
-            // 
-            btnServo.Anchor = AnchorStyles.Bottom;
-            btnServo.Location = new Point(526, 405);
-            btnServo.Name = "btnServo";
-            btnServo.Size = new Size(94, 29);
-            btnServo.TabIndex = 6;
-            btnServo.Text = "Servo";
-            btnServo.UseVisualStyleBackColor = true;
-            btnServo.Click += btnServo_Click;
-            // 
             // btnMotor
             // 
             btnMotor.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
@@ -134,7 +123,6 @@
             // 
             // lblPercent
             // 
-            lblPercent.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             lblPercent.Location = new Point(340, 7);
             lblPercent.Name = "lblPercent";
             lblPercent.Size = new Size(36, 25);
@@ -143,7 +131,6 @@
             // 
             // progressBattery
             // 
-            progressBattery.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             progressBattery.Location = new Point(340, 32);
             progressBattery.Name = "progressBattery";
             progressBattery.Size = new Size(125, 23);
@@ -151,7 +138,7 @@
             // 
             // batteryLogBox
             // 
-            batteryLogBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            batteryLogBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             batteryLogBox.Location = new Point(471, 31);
             batteryLogBox.Multiline = true;
             batteryLogBox.Name = "batteryLogBox";
@@ -160,11 +147,23 @@
             batteryLogBox.Size = new Size(330, 50);
             batteryLogBox.TabIndex = 3;
             // 
+            // btnBatteryInfo
+            // 
+            btnBatteryInfo.Anchor = AnchorStyles.Bottom;
+            btnBatteryInfo.Location = new Point(526, 405);
+            btnBatteryInfo.Name = "btnBatteryInfo";
+            btnBatteryInfo.Size = new Size(94, 29);
+            btnBatteryInfo.TabIndex = 6;
+            btnBatteryInfo.Text = "Battery Info";
+            btnBatteryInfo.UseVisualStyleBackColor = true;
+            btnBatteryInfo.Click += btnBatteryInfo_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(999, 522);
+            Controls.Add(btnBatteryInfo);
             Controls.Add(lblPercent);
             Controls.Add(progressBattery);
             Controls.Add(batteryLogBox);
@@ -174,7 +173,6 @@
             Controls.Add(btnLedOn);
             Controls.Add(btnConnect);
             Controls.Add(comboPorts);
-            Controls.Add(btnServo);
             Controls.Add(btnMotor);
             Controls.Add(btnSensor);
             Name = "Form1";
@@ -193,12 +191,13 @@
         private Label label1;
         private Button btnLedOff;
         private PictureBox pictureBox1;
-        private Button btnServo;
         private Button btnMotor;
         private Button btnSensor;
         private Label lblPercent;
         private ProgressBar progressBattery;
         private TextBox batteryLogBox;
+        private Button btnBatteryInfo;
+
 
 
 
