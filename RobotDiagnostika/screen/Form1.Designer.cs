@@ -90,6 +90,7 @@
             // 
             // pictureBox1
             // 
+            pictureBox1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             pictureBox1.Image = Properties.Resources.Clipped_image_20250328_211429;
             pictureBox1.Location = new Point(358, 87);
             pictureBox1.Name = "pictureBox1";
@@ -100,6 +101,7 @@
             // 
             // btnServo
             // 
+            btnServo.Anchor = AnchorStyles.Bottom;
             btnServo.Location = new Point(526, 405);
             btnServo.Name = "btnServo";
             btnServo.Size = new Size(94, 29);
@@ -110,9 +112,10 @@
             // 
             // btnMotor
             // 
+            btnMotor.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             btnMotor.Location = new Point(677, 405);
             btnMotor.Name = "btnMotor";
-            btnMotor.Size = new Size(94, 29);
+            btnMotor.Size = new Size(94, 30);
             btnMotor.TabIndex = 7;
             btnMotor.Text = "Motor";
             btnMotor.UseVisualStyleBackColor = true;
@@ -120,6 +123,7 @@
             // 
             // btnSensor
             // 
+            btnSensor.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             btnSensor.Location = new Point(358, 405);
             btnSensor.Name = "btnSensor";
             btnSensor.Size = new Size(94, 29);
@@ -130,6 +134,7 @@
             // 
             // lblPercent
             // 
+            lblPercent.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             lblPercent.Location = new Point(340, 7);
             lblPercent.Name = "lblPercent";
             lblPercent.Size = new Size(36, 25);
@@ -138,6 +143,7 @@
             // 
             // progressBattery
             // 
+            progressBattery.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             progressBattery.Location = new Point(340, 32);
             progressBattery.Name = "progressBattery";
             progressBattery.Size = new Size(125, 23);
@@ -145,6 +151,7 @@
             // 
             // batteryLogBox
             // 
+            batteryLogBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             batteryLogBox.Location = new Point(471, 31);
             batteryLogBox.Multiline = true;
             batteryLogBox.Name = "batteryLogBox";
