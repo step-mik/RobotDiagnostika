@@ -25,10 +25,15 @@ namespace RobotDiagnostika.Logic
             int start = input.IndexOf(keyword);
             if (start == -1) return "";
             start += keyword.Length;
-            int end = input.IndexOf(' ', start);
-            if (end == -1) end = input.Length;
+
+            // hledej první znak, který není číslice nebo tečka
+            int end = start;
+            while (end < input.Length && (char.IsDigit(input[end]) || input[end] == '.'))
+                end++;
+
             return input.Substring(start, end - start);
         }
+
     }
 }
 

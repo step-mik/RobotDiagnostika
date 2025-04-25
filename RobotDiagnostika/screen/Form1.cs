@@ -105,11 +105,14 @@ namespace RobotDiagnostika
                 double voltage = BatteryIndicator.CalculateVoltageFromLine(line);
                 int percent = BatteryIndicator.CalculatePercentFromLine(line);
 
-                lblVoltage.Text = $"Voltage: {voltage:F2} V";
                 lblPercent.Text = $"{percent}%";
                 progressBattery.Value = Math.Clamp(percent, 0, 100);
+
+                batteryLogBox.AppendText(line + Environment.NewLine); // 🧠 zobrazit výstup
             });
         }
+
+
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
