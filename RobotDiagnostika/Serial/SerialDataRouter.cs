@@ -1,5 +1,4 @@
-﻿// SerialDataRouter.cs
-using System;
+﻿using System;
 using System.IO.Ports;
 
 namespace RobotDiagnostika.Serial
@@ -9,6 +8,7 @@ namespace RobotDiagnostika.Serial
         private readonly SerialPort port;
 
         public event Action<string>? OnMotorStatus;
+        public event Action<string>? OnBatteryStatus;
 
         public SerialDataRouter(SerialPort port)
         {
@@ -28,6 +28,10 @@ namespace RobotDiagnostika.Serial
                 if (line.StartsWith("STATUS "))
                 {
                     OnMotorStatus?.Invoke(line);
+                }
+                else if (line.StartsWith("BATTERY "))
+                {
+                    OnBatteryStatus?.Invoke(line);
                 }
             }
             catch (IOException) { }

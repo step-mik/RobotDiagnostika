@@ -10,6 +10,8 @@ namespace RobotDiagnostika
     {
         private SerialManager? serial;
         private SerialDataRouter? serialRouter;
+        private BatteryInfoForm? batteryInfoForm;
+
 
         public Form1()
         {
@@ -20,7 +22,7 @@ namespace RobotDiagnostika
             btnLedOff.Click += btnLedOff_Click;
             btnConnect.Click += btnConnect_Click;
             this.Controls.Add(this.btnMotor);
-            this.Controls.Add(this.btnServo);
+            this.Controls.Add(this.btnBatteryInfo);
             this.Controls.Add(this.btnSensor);
 
 
@@ -49,6 +51,8 @@ namespace RobotDiagnostika
 
                 // Vytvoříme router po otevření portu
                 serialRouter = new SerialDataRouter(serial.Port);
+                serialRouter.OnBatteryStatus += HandleBatteryLine;
+
 
                 MessageBox.Show("Připojeno!");
             }
@@ -69,11 +73,7 @@ namespace RobotDiagnostika
             serial?.Send(LedCommand.Off);
         }
 
-        private void btnServo_Click(object sender, EventArgs e)
-        {
-            var servoForm = new ServoControlForm(); // Vytvoření nové instance formuláře pro servo
-            servoForm.Show();
-        }
+
 
         private void btnMotor_Click(object? sender, EventArgs e)
         {
@@ -94,6 +94,28 @@ namespace RobotDiagnostika
             sensorForm.Show();
         }
 
+        private void HandleBatteryLine(string line)
+        {
+            if (!IsHandleCreated || IsDisposed) return;
+
+            Invoke(() =>
+            {
+                double voltage = BatteryIndicator.CalculateVoltageFromLine(line);
+                int percent = BatteryIndicator.CalculatePercentFromLine(line);
+
+                lblPercent.Text = $"{percent}%";
+                progressBattery.Value = Math.Clamp(percent, 0, 100);
+                batteryLogBox.AppendText(line + Environment.NewLine);
+
+                // 🔁 aktualizuj BatteryInfoForm (pokud je otevřený)
+                batteryInfoForm?.UpdateBatteryInfo(voltage, percent, line);
+
+            });
+        }
+
+
+
+
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             base.OnFormClosing(e);
@@ -103,6 +125,21 @@ namespace RobotDiagnostika
             if (serial?.Port?.IsOpen == true)
                 serial.Port.Close();
         }
+
+        private void btnBatteryInfo_Click(object sender, EventArgs e)
+        {
+            if (batteryInfoForm == null || batteryInfoForm.IsDisposed)
+            {
+                batteryInfoForm = new BatteryInfoForm();
+                batteryInfoForm.Show();
+            }
+            else
+            {
+                batteryInfoForm.BringToFront();
+            }
+        }
+
+
 
 
 
