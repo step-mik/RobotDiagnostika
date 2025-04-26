@@ -112,20 +112,6 @@ namespace RobotDiagnostika
 
             });
         }
-
-
-
-
-        protected override void OnFormClosing(FormClosingEventArgs e)
-        {
-            base.OnFormClosing(e);
-
-            serialRouter?.Detach();
-
-            if (serial?.Port?.IsOpen == true)
-                serial.Port.Close();
-        }
-
         private void btnBatteryInfo_Click(object sender, EventArgs e)
         {
             if (batteryInfoForm == null || batteryInfoForm.IsDisposed)
@@ -140,8 +126,15 @@ namespace RobotDiagnostika
         }
 
 
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            base.OnFormClosing(e);
 
+            serialRouter?.Detach();
 
+            if (serial?.Port?.IsOpen == true)
+                serial.Port.Close();
+        }
 
 
     }
