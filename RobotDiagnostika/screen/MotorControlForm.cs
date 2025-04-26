@@ -34,6 +34,8 @@ namespace RobotDiagnostika.screen
             rightChartManager = new MotorChartManager(chartRight);
 
             this.router.OnMotorStatus += HandleMotorStatus;
+
+            TopMost = true; // 🧠 vždy nahoře
         }
 
         private void HandleMotorStatus(string line)

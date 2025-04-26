@@ -9,6 +9,7 @@ namespace RobotDiagnostika.screen
         public BatteryInfoForm()
         {
             InitializeComponent();
+            TopMost = true; // 🧠 vždy nahoře
             batteryChartManager = new BatteryChartManager(batteryChart); // jen TADY to má být!
         }
 
