@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text.RegularExpressions;
 
 namespace RobotDiagnostika.Logic
 {
@@ -10,30 +6,37 @@ namespace RobotDiagnostika.Logic
     {
         public static double CalculateVoltageFromLine(string line)
         {
-            var voltageStr = GetValueAfter(line, "VOLTAGE:").Replace("V", "");
-            return double.TryParse(voltageStr, out var voltage) ? voltage : 0;
+            try
+            {
+                var match = Regex.Match(line, @"BATTERY VOLTAGE:(\d+[.,]\d+)V");
+                if (match.Success)
+                {
+                    string voltageRaw = match.Groups[1].Value.Replace(',', '.');
+                    if (double.TryParse(voltageRaw, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var voltage))
+                        return voltage;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show("Voltage error: " + ex.Message);
+            }
+            return 0;
         }
+
 
         public static int CalculatePercentFromLine(string line)
         {
-            var percentStr = GetValueAfter(line, "PERCENT:").Replace("%", "");
-            return int.TryParse(percentStr, out var percent) ? percent : 0;
+            try
+            {
+                var match = Regex.Match(line, @"PERCENT:(\d+)%");
+                if (match.Success && int.TryParse(match.Groups[1].Value, out var percent))
+                    return percent;
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show("Percent error: " + ex.Message);
+            }
+            return 0;
         }
-
-        private static string GetValueAfter(string input, string keyword)
-        {
-            int start = input.IndexOf(keyword);
-            if (start == -1) return "";
-            start += keyword.Length;
-
-            // hledej první znak, který není číslice nebo tečka
-            int end = start;
-            while (end < input.Length && (char.IsDigit(input[end]) || input[end] == '.'))
-                end++;
-
-            return input.Substring(start, end - start);
-        }
-
     }
 }
-

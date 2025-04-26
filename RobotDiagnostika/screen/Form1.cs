@@ -109,6 +109,7 @@ namespace RobotDiagnostika
 
                 // 🔁 aktualizuj BatteryInfoForm (pokud je otevřený)
                 batteryInfoForm?.UpdateBatteryInfo(voltage, percent, line);
+
             });
         }
 

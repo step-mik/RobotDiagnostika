@@ -2,15 +2,8 @@
 {
     partial class BatteryInfoForm
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -22,18 +15,18 @@
 
         #region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             infoLabel = new Label();
             safeRangeLabel = new Label();
             rechargeLabel = new Label();
             lblPercentInfo = new Label();
             progressBatteryInfo = new ProgressBar();
             batteryLogBoxInfo = new TextBox();
+            batteryChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            ((System.ComponentModel.ISupportInitialize)batteryChart).BeginInit();
             SuspendLayout();
             // 
             // infoLabel
@@ -86,15 +79,28 @@
             batteryLogBoxInfo.Name = "batteryLogBoxInfo";
             batteryLogBoxInfo.ReadOnly = true;
             batteryLogBoxInfo.ScrollBars = ScrollBars.Vertical;
-            batteryLogBoxInfo.Size = new Size(330, 50);
+            batteryLogBoxInfo.Size = new Size(301, 50);
             batteryLogBoxInfo.TabIndex = 5;
-
+            // 
+            // batteryChart
+            // 
+            batteryChart.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            chartArea1.Name = "ChartArea1";
+            batteryChart.ChartAreas.Add(chartArea1);
+            batteryChart.Location = new Point(30, 260);
+            batteryChart.Name = "batteryChart";
+            series1.ChartArea = "ChartArea1";
+            series1.Name = "Voltage";
+            batteryChart.Series.Add(series1);
+            batteryChart.Size = new Size(346, 226);
+            batteryChart.TabIndex = 6;
             // 
             // BatteryInfoForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(643, 346);
+            ClientSize = new Size(619, 513);
+            Controls.Add(batteryChart);
             Controls.Add(rechargeLabel);
             Controls.Add(safeRangeLabel);
             Controls.Add(infoLabel);
@@ -103,6 +109,7 @@
             Controls.Add(batteryLogBoxInfo);
             Name = "BatteryInfoForm";
             Text = "Battery Info";
+            ((System.ComponentModel.ISupportInitialize)batteryChart).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -115,5 +122,6 @@
         private Label lblPercentInfo;
         private ProgressBar progressBatteryInfo;
         private TextBox batteryLogBoxInfo;
+        private System.Windows.Forms.DataVisualization.Charting.Chart batteryChart;
     }
 }
