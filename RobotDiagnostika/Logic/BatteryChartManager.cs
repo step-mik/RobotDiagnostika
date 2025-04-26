@@ -36,7 +36,14 @@ namespace RobotDiagnostika.Logic
 
         public void AddPoint(double voltage)
         {
+            if (chart.ChartAreas.Count == 0)
+            {
+                chart.ChartAreas.Add(new ChartArea());
+            }
+
+            var area = chart.ChartAreas[0];
             var series = chart.Series[seriesName];
+
             series.Points.AddXY(pointIndex++, voltage);
 
             if (pointIndex >= maxPoints && pointIndex % 10 == 0)
@@ -44,11 +51,11 @@ namespace RobotDiagnostika.Logic
                 for (int i = 0; i < 10; i++)
                     if (series.Points.Count > 0) series.Points.RemoveAt(0);
 
-                var area = chart.ChartAreas[0];
                 area.AxisX.Minimum = pointIndex - maxPoints + 10;
                 area.AxisX.Maximum = pointIndex + 10;
             }
         }
+
 
         public void Clear()
         {
