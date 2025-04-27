@@ -1,3 +1,10 @@
+// --- Nastavení pinu a baterie ---
+const int analogPin = A0;
+const float referenceVoltage = 5.0;
+const float voltageDividerRatio = 3.256; // 12.6V / 3.825V
+const float maxBatteryVoltage = 12.6;
+const float minBatteryVoltage = 11.4;
+
 String command;
 
 int leftPWM = 200;
@@ -5,20 +12,18 @@ int rightPWM = 200;
 bool leftReversed = false;
 bool rightReversed = false;
 
-unsigned long lastStatusMillis = 0; // ⬅️ pro logování každých 2s
+unsigned long lastStatusMillis = 0;
 
 void setup() {
   Serial.begin(9600);
 
-  // Levý motor
-  pinMode(5, OUTPUT); // ENA (PWM)
-  pinMode(7, OUTPUT); // IN1
-  pinMode(2, OUTPUT); // IN2
-
-  // Pravý motor
-  pinMode(6, OUTPUT); // ENB (PWM)
-  pinMode(3, OUTPUT); // IN3
-  pinMode(4, OUTPUT); // IN4
+  // Motory
+  pinMode(5, OUTPUT);
+  pinMode(7, OUTPUT);
+  pinMode(2, OUTPUT);
+  pinMode(6, OUTPUT);
+  pinMode(3, OUTPUT);
+  pinMode(4, OUTPUT);
 
   // LED
   pinMode(13, OUTPUT);
@@ -33,32 +38,22 @@ void setup() {
 }
 
 void loop() {
-  // --- Příkazy z PC ---
+  // === Příjem příkazů z PC ===
   if (Serial.available()) {
     command = Serial.readStringUntil('\n');
     command.trim();
 
-    // --- LED ---
-    if (command == "LED_ON") {
-      digitalWrite(13, HIGH);
-    }
-    else if (command == "LED_OFF") {
-      digitalWrite(13, LOW);
-    }
+    // LED ovládání
+    if (command == "LED_ON") digitalWrite(13, HIGH);
+    else if (command == "LED_OFF") digitalWrite(13, LOW);
 
-    // --- Levý motor ---
+    // Levý motor
     else if (command == "LEFT_ON") {
-      int limitedPWM = min(leftPWM, 130);  // max 150
-      if (leftReversed) {
-        digitalWrite(7, LOW);
-        digitalWrite(2, HIGH);
-      } else {
-        digitalWrite(7, HIGH);
-        digitalWrite(2, LOW);
-      }
-      analogWrite(5, limitedPWM);  // ✅ použít omezenou hodnotu!
+      int limitedPWM = min(leftPWM, 130);
+      digitalWrite(7, leftReversed ? LOW : HIGH);
+      digitalWrite(2, leftReversed ? HIGH : LOW);
+      analogWrite(5, limitedPWM);
     }
-
     else if (command == "LEFT_OFF") {
       digitalWrite(7, LOW);
       digitalWrite(2, LOW);
@@ -72,19 +67,13 @@ void loop() {
       leftReversed = !leftReversed;
     }
 
-    // --- Pravý motor ---
+    // Pravý motor
     else if (command == "RIGHT_ON") {
-    int limitedPWM = min(rightPWM, 180);  // max 150
-    if (rightReversed) {
-      digitalWrite(3, LOW);
-      digitalWrite(4, HIGH);
-    } else {
-      digitalWrite(3, HIGH);
-      digitalWrite(4, LOW);
+      int limitedPWM = min(rightPWM, 180);
+      digitalWrite(3, rightReversed ? LOW : HIGH);
+      digitalWrite(4, rightReversed ? HIGH : LOW);
+      analogWrite(6, limitedPWM);
     }
-    analogWrite(6, limitedPWM);  // ✅ použít omezenou hodnotu!
-    }
-
     else if (command == "RIGHT_OFF") {
       digitalWrite(3, LOW);
       digitalWrite(4, LOW);
@@ -98,7 +87,7 @@ void loop() {
       rightReversed = !rightReversed;
     }
 
-    // --- Oba motory ---
+    // Stop obou motorů
     else if (command == "ALL_STOP") {
       digitalWrite(7, LOW);
       digitalWrite(2, LOW);
@@ -109,10 +98,11 @@ void loop() {
     }
   }
 
-  // --- Stavový log každé 2 sekundy ---
-  if (millis() - lastStatusMillis >= 200) {
+  // === Logování každých 2 sekund ===
+  if (millis() - lastStatusMillis >= 2000) {
     lastStatusMillis = millis();
 
+    // Výpis motorového stavu
     Serial.println("STATUS L:" + String((digitalRead(7) || digitalRead(2)) ? "ON" : "OFF") +
                    " SPEED:" + String(leftPWM) +
                    " DIR:" + String(leftReversed ? "REV" : "FWD"));
@@ -120,5 +110,18 @@ void loop() {
     Serial.println("STATUS R:" + String((digitalRead(3) || digitalRead(4)) ? "ON" : "OFF") +
                    " SPEED:" + String(rightPWM) +
                    " DIR:" + String(rightReversed ? "REV" : "FWD"));
+
+    // Výpis baterie
+    int rawValue = analogRead(analogPin);
+    float analogVoltage = rawValue * referenceVoltage / 1023.0;
+    float batteryVoltage = analogVoltage * voltageDividerRatio;
+    float percent = (batteryVoltage - minBatteryVoltage) / (maxBatteryVoltage - minBatteryVoltage) * 100.0;
+    percent = constrain(percent, 0, 100);
+
+    Serial.print("BATTERY VOLTAGE:");
+    Serial.print(batteryVoltage, 2);  // ✅ dvě desetinná místa
+    Serial.print("V PERCENT:");
+    Serial.print((int)percent);
+    Serial.println("%");
   }
 }
