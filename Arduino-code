@@ -5,6 +5,10 @@ const float voltageDividerRatio = 3.256; // 12.6V / 3.825V
 const float maxBatteryVoltage = 12.6;
 const float minBatteryVoltage = 11.4;
 
+// Nastavení pinů pro senzor
+const int trigPin = 9;
+const int echoPin = 11;
+
 String command;
 
 int leftPWM = 200;
@@ -13,6 +17,8 @@ bool leftReversed = false;
 bool rightReversed = false;
 
 unsigned long lastStatusMillis = 0;
+long duration;
+float distanceCm;
 
 void setup() {
   Serial.begin(9600);
@@ -27,6 +33,10 @@ void setup() {
 
   // LED
   pinMode(13, OUTPUT);
+
+  // Senzor
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
 
   // Stop all motors
   digitalWrite(7, LOW);
@@ -102,6 +112,20 @@ void loop() {
   if (millis() - lastStatusMillis >= 2000) {
     lastStatusMillis = millis();
 
+    // Měření vzdálenosti
+    digitalWrite(trigPin, LOW);
+    delayMicroseconds(2);
+
+    digitalWrite(trigPin, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(trigPin, LOW);
+
+    // Měření času trvání odrazu
+    duration = pulseIn(echoPin, HIGH);
+
+    // Převod na vzdálenost v cm
+    distanceCm = duration * 0.0343 / 2;
+
     // Výpis motorového stavu
     Serial.println("STATUS L:" + String((digitalRead(7) || digitalRead(2)) ? "ON" : "OFF") +
                    " SPEED:" + String(leftPWM) +
@@ -123,5 +147,10 @@ void loop() {
     Serial.print("V PERCENT:");
     Serial.print((int)percent);
     Serial.println("%");
+
+    // Výpis vzdálenosti ze senzoru
+    Serial.print("DISTANCE: ");
+    Serial.print(distanceCm);
+    Serial.println(" cm");
   }
 }
