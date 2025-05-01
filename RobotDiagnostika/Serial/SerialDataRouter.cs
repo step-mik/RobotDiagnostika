@@ -9,6 +9,7 @@ namespace RobotDiagnostika.Serial
 
         public event Action<string>? OnMotorStatus;
         public event Action<string>? OnBatteryStatus;
+        public event Action<string>? OnSensorData;
 
         public SerialDataRouter(SerialPort port)
         {
@@ -32,6 +33,10 @@ namespace RobotDiagnostika.Serial
                 else if (line.StartsWith("BATTERY "))
                 {
                     OnBatteryStatus?.Invoke(line);
+                }
+                else if (line.Contains("DISTANCE:"))
+                {
+                    OnSensorData?.Invoke(line);
                 }
             }
             catch (IOException) { }

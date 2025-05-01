@@ -90,7 +90,13 @@ namespace RobotDiagnostika
 
         private void btnSensor_Click(object sender, EventArgs e)
         {
-           var sensorForm = new SensorControlForm();
+            if (serial == null || serialRouter == null)
+            {
+                MessageBox.Show("Nejprve se připoj k sériovému portu.");
+                return;
+            }
+
+            var sensorForm = new SensorControlForm(serialRouter);
             sensorForm.Show();
         }
 
