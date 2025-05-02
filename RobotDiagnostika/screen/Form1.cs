@@ -120,6 +120,12 @@ namespace RobotDiagnostika
         }
         private void btnBatteryInfo_Click(object sender, EventArgs e)
         {
+            if (serial == null || serialRouter == null)
+            {
+                MessageBox.Show("Nejprve se připoj k sériovému portu.");
+                return;
+            }
+
             if (batteryInfoForm == null || batteryInfoForm.IsDisposed)
             {
                 batteryInfoForm = new BatteryInfoForm();

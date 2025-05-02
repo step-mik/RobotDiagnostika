@@ -1,31 +1,24 @@
-﻿using RobotDiagnostika.Serial;
+﻿using RobotDiagnostika.Logic;
+using RobotDiagnostika.Serial;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Forms.DataVisualization.Charting;
 
 namespace RobotDiagnostika.screen
 {
     public partial class SensorControlForm : Form
     {
         private readonly SerialDataRouter router;
-        private int sampleIndex = 0;
+        private readonly DistanceChartManager distanceChartManager;
 
         public SensorControlForm(SerialDataRouter router)
         {
             InitializeComponent();
             this.router = router;
 
+            distanceChartManager = new DistanceChartManager(distanceChart);
             router.OnSensorData += Router_OnSensorData;
         }
-
 
         private void Router_OnSensorData(string line)
         {
@@ -39,7 +32,7 @@ namespace RobotDiagnostika.screen
 
         private string ExtractDistanceValue(string line)
         {
-            // Příklad: "Vzdalenost: 63.4 cm"
+            // Např. "DISTANCE:63.4cm"
             int start = line.IndexOf("DISTANCE:") + "DISTANCE:".Length;
             string value = line.Substring(start).Replace("cm", "").Trim();
             return value;
@@ -54,18 +47,12 @@ namespace RobotDiagnostika.screen
             }
 
             distanceLogBoxInfo.Text = $"{distance:F1} cm";
-
-            var series = distanceChart.Series["DistanceSeries"];
-            series.Points.AddXY(++sampleIndex, distance);
-
-            // Udržuj maximálně 10 bodů v grafu
-            if (series.Points.Count > 10)
-                series.Points.RemoveAt(0);
+            distanceChartManager.AddPoint(distance);
         }
 
         private void SensorControlForm_Load(object sender, EventArgs e)
         {
-
+            // Nepovinné – můžeš něco inicializovat při načtení
         }
     }
 }
