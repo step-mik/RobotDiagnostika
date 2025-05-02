@@ -14,6 +14,12 @@ namespace RobotDiagnostika.Logic
             this.chart = chart;
             this.seriesName = seriesName;
 
+            // Ensure the chart and areas are initialized
+            if (chart == null || chart.ChartAreas.Count == 0)
+            {
+                chart.ChartAreas.Add(new ChartArea());
+            }
+
             chart.Series.Clear();
             chart.ChartAreas.Clear();
 
@@ -40,21 +46,31 @@ namespace RobotDiagnostika.Logic
 
         public void AddPoint(double distance)
         {
-            if (chart.ChartAreas.Count == 0)
+            // Ensure chart and series are initialized before attempting to add points
+            if (chart == null || chart.ChartAreas.Count == 0 || chart.Series.Count == 0)
             {
-                chart.ChartAreas.Add(new ChartArea());
+                return; // Exit if chart is not initialized correctly
             }
 
             var area = chart.ChartAreas[0];
             var series = chart.Series[seriesName];
 
+            // Přidání bodu
             series.Points.AddXY(pointIndex++, distance);
 
+            // Pokud počet bodů dosáhne maximálního počtu, posune graf
             if (pointIndex >= maxPoints && pointIndex % 10 == 0)
             {
+                // Odstraní staré body
                 for (int i = 0; i < 10; i++)
-                    if (series.Points.Count > 0) series.Points.RemoveAt(0);
+                {
+                    if (series.Points.Count > 0)
+                    {
+                        series.Points.RemoveAt(0);
+                    }
+                }
 
+                // Posune osy
                 area.AxisX.Minimum = pointIndex - maxPoints + 10;
                 area.AxisX.Maximum = pointIndex + 10;
             }
@@ -62,12 +78,17 @@ namespace RobotDiagnostika.Logic
 
         public void Clear()
         {
-            chart.Series[seriesName].Points.Clear();
-            pointIndex = 0;
+            // Pokud graf existuje, vyčistí ho
+            if (chart != null)
+            {
+                chart.Series[seriesName].Points.Clear();
+                pointIndex = 0;
 
-            var area = chart.ChartAreas[0];
-            area.AxisX.Minimum = 0;
-            area.AxisX.Maximum = maxPoints;
+                var area = chart.ChartAreas[0];
+                area.AxisX.Minimum = 0;
+                area.AxisX.Maximum = maxPoints;
+            }
         }
     }
+
 }
