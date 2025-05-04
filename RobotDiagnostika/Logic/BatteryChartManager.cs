@@ -1,4 +1,6 @@
-﻿using System.Windows.Forms.DataVisualization.Charting;
+﻿using System;
+using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace RobotDiagnostika.Logic
 {
@@ -11,17 +13,14 @@ namespace RobotDiagnostika.Logic
 
         public BatteryChartManager(Chart chart, string seriesName = "Voltage")
         {
-            this.chart = chart;
+            this.chart = chart ?? throw new ArgumentNullException(nameof(chart));
             this.seriesName = seriesName;
 
-            // Pokud není graf inicializován, nic nedělej
-            if (chart == null || chart.ChartAreas.Count == 0) return;
-
-            // Vyčistíme existující data, pokud jsou
+            // Vyčistíme existující oblasti a série
             chart.Series.Clear();
             chart.ChartAreas.Clear();
 
-            // Vytvoříme novou ChartArea a Series
+            // Přidáme novou ChartArea a sérii
             var area = new ChartArea();
             chart.ChartAreas.Add(area);
 
@@ -36,39 +35,46 @@ namespace RobotDiagnostika.Logic
             area.AxisX.Minimum = 0;
             area.AxisX.Maximum = maxPoints;
             area.AxisX.Interval = 2;
-            area.AxisX.Title = "Time (s)";  // Titulek osy X
+            area.AxisX.Title = "Time (s)";
 
             area.AxisY.Minimum = 10;
             area.AxisY.Maximum = 13;
-            area.AxisY.Title = "Voltage (U)";  // Titulek osy Y
+            area.AxisY.Title = "Voltage (U)";
         }
 
         public void AddPoint(double voltage)
         {
-            // Kontrola, zda graf a série existují
-            if (chart == null || chart.ChartAreas.Count == 0 || chart.Series.Count == 0) return;
+            // Ověření, že graf a potřebná série existují
+            if (chart == null || chart.ChartAreas.Count == 0 || chart.Series.Count == 0)
+                return;
 
             var area = chart.ChartAreas[0];
             var series = chart.Series[seriesName];
 
-            // Přidání bodu s časem a napětím
+            // Ověření existence Series
+            if (series == null || area == null || area.AxisX == null)
+                return;
+
+            // Přidání bodu
             series.Points.AddXY(pointIndex++, voltage);
 
-            // Pokud počet bodů dosáhne maximálního počtu, posune graf
+            // Pokud počet bodů přesáhne limit, smažeme první body a posuneme osu X
             if (pointIndex >= maxPoints)
             {
-                // Odstraní staré body, aby se graf posunul
-                for (int i = 0; i < 10; i++)
+                for (int i = 0; i < 10 && series.Points.Count > 0; i++)
                 {
-                    if (series.Points.Count > 0)
-                    {
-                        series.Points.RemoveAt(0);
-                    }
+                    series.Points.RemoveAt(0);
                 }
 
-                // Posune osy
-                area.AxisX.Minimum = pointIndex - maxPoints + 10;
-                area.AxisX.Maximum = pointIndex + 10;
+                try
+                {
+                    area.AxisX.Minimum = pointIndex - maxPoints + 10;
+                    area.AxisX.Maximum = pointIndex + 10;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Chyba při nastavování osy X: {ex.Message}", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 

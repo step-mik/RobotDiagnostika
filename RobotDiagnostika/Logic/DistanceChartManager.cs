@@ -11,18 +11,14 @@ namespace RobotDiagnostika.Logic
 
         public DistanceChartManager(Chart chart, string seriesName = "DistanceSeries")
         {
-            this.chart = chart;
+            this.chart = chart ?? throw new ArgumentNullException(nameof(chart));
             this.seriesName = seriesName;
 
-            // Ensure the chart and areas are initialized
-            if (chart == null || chart.ChartAreas.Count == 0)
-            {
-                chart.ChartAreas.Add(new ChartArea());
-            }
-
+            // Vymažeme existující oblasti a série, abychom nezačínali na špatných datech
             chart.Series.Clear();
             chart.ChartAreas.Clear();
 
+            // Přidání nové oblasti a série
             var area = new ChartArea();
             chart.ChartAreas.Add(area);
 
@@ -37,44 +33,49 @@ namespace RobotDiagnostika.Logic
             area.AxisX.Minimum = 0;
             area.AxisX.Maximum = maxPoints;
             area.AxisX.Interval = 2;
-            area.AxisX.Title = "Čas (s)"; // ⬅️ Popisek X osy
+            area.AxisX.Title = "Čas (s)";
 
             area.AxisY.Minimum = 0;
             area.AxisY.Maximum = 200;
-            area.AxisY.Title = "Vzdálenost (cm)"; // ⬅️ Popisek Y osy
+            area.AxisY.Title = "Vzdálenost (cm)";
         }
+
 
         public void AddPoint(double distance)
         {
-            // Ensure chart and series are initialized before attempting to add points
             if (chart == null || chart.ChartAreas.Count == 0 || chart.Series.Count == 0)
-            {
-                return; // Exit if chart is not initialized correctly
-            }
+                return;
 
             var area = chart.ChartAreas[0];
-            var series = chart.Series[seriesName];
+            var series = chart.Series.FindByName(seriesName);
 
-            // Přidání bodu
+            // Kontrola existence a inicializace
+            if (area == null || series == null || area.AxisX == null)
+                return;
+
             series.Points.AddXY(pointIndex++, distance);
 
-            // Pokud počet bodů dosáhne maximálního počtu, posune graf
             if (pointIndex >= maxPoints && pointIndex % 10 == 0)
             {
-                // Odstraní staré body
-                for (int i = 0; i < 10; i++)
+                for (int i = 0; i < 10 && series.Points.Count > 0; i++)
                 {
-                    if (series.Points.Count > 0)
-                    {
-                        series.Points.RemoveAt(0);
-                    }
+                    series.Points.RemoveAt(0);
                 }
 
-                // Posune osy
-                area.AxisX.Minimum = pointIndex - maxPoints + 10;
-                area.AxisX.Maximum = pointIndex + 10;
+                // Dodatečná ochrana přes try-catch (pro případ nečekané chyby)
+                try
+                {
+                    area.AxisX.Minimum = pointIndex - maxPoints + 10;
+                    area.AxisX.Maximum = pointIndex + 10;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Neočekávaná chyba při nastavování os: {ex.Message}", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
+
+
 
         public void Clear()
         {
